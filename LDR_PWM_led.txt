@@ -1,0 +1,38 @@
+#include "LDRSensor.h"
+
+// Pin assignments
+#define LDR_PIN 2   // Chân kết nối cảm biến LDR
+#define LED_PIN 8   // Chân kết nối đèn LED (PWM)
+
+// Create instance of LDRSensor class
+LDRSensor ldrSensor(LDR_PIN);
+
+void setup()
+{
+  Serial.begin(9600);
+
+  // Initialize LDR sensor
+  ldrSensor.init();
+
+  // Initialize LED pin as output
+  pinMode(LED_PIN, OUTPUT);
+}
+
+void loop()
+{
+  // Get the light level percentage from LDR sensor
+  int lightLevelPercent = ldrSensor.getLightLevelPercent();
+
+  // Print the light level to the serial monitor
+  Serial.print("Light Level (%): ");
+  Serial.println(lightLevelPercent);
+
+  // Convert the light level percentage (0-100%) to a PWM value (0-255)
+  int pwmValue = map(lightLevelPercent, 0, 100, 0, 255);
+
+  // Write the PWM value to the LED
+  analogWrite(LED_PIN, pwmValue);
+
+  // Delay for a short period
+  delay(500); // Update every 500ms
+}
